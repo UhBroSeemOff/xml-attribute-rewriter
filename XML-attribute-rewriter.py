@@ -5,31 +5,32 @@ import xml.etree.ElementTree as ET
 
 class XmlAttributeRewriter:
     def __init__(self, file_path) -> None:
-        self.__file_path__: str = file_path
-        self.__tree__: ET.ElementTree = ET.parse(file_path)
-        self.__root__: ET.Element = self.__tree__.getroot()
-        self.__encoding__: str = 'utf-16'
+        self._file_path: str = file_path
+        self._tree: ET.ElementTree = ET.parse(file_path)
+        self._root: ET.Element = self._tree.getroot()
+        self._ENCODING: str = 'utf-16'
 
     def rewrite_attribute(self, node_path, attribute_path, value) -> None:
-        self.__root__.find(f'./{node_path}').set(attribute_path, value)
-        self.__tree__.write(
-            self.__file_path__,
-            encoding=self.__encoding__, xml_declaration=True)
+        self._root.find(f'./{node_path}').set(attribute_path, value)
+        self._tree.write(
+            self._file_path,
+            encoding=self._ENCODING, xml_declaration=True)
 
 
 if(__name__ == '__main__'):
-    must_have_commands = ['-f', '-n', '-a', '-v']
+    FILE_COMMAND_KEY, NODE_KEY, ATTRIBUTE_KEY, VALUE_KEY = '-f', '-n', '-a', '-v'
+
     command_dictionary = dict()
 
-    opts = getopt.getopt(sys.argv[1:], 'f:n:a:v:')[0]
+    arguments = getopt.getopt(sys.argv[1:], 'f:n:a:v:')[0]
 
-    for tupple in opts:
+    for tupple in arguments:
         key = tupple[0]
         command = tupple[1]
         command_dictionary[key] = command
 
     rewriter: XmlAttributeRewriter = XmlAttributeRewriter(
-        command_dictionary['-f'])
+        command_dictionary[FILE_COMMAND_KEY])
 
     rewriter.rewrite_attribute(
-        command_dictionary['-n'], command_dictionary['-a'], command_dictionary['-v'])
+        command_dictionary[NODE_KEY], command_dictionary[ATTRIBUTE_KEY], command_dictionary[VALUE_KEY])
